@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f8f2ff">
+<title>VIBES · Datos de transferencia</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #21106e;
+    background:
+      radial-gradient(circle at 5% 8%, rgba(201,183,255,.75), transparent 32%),
+      radial-gradient(circle at 95% 15%, rgba(255,184,222,.78), transparent 34%),
+      radial-gradient(circle at 90% 90%, rgba(175,203,255,.75), transparent 35%),
+      radial-gradient(circle at 10% 88%, rgba(255,240,181,.7), transparent 30%),
+      #f8f2ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    overflow-x: hidden;
+  }
+  .wrap {
+    width: min(100%, 520px);
+    text-align: center;
+  }
+  .spark { position: fixed; color: white; opacity: .9; font-size: 24px; }
+  .s1 { top: 7%; left: 9%; }
+  .s2 { top: 18%; right: 8%; font-size: 18px; }
+  .s3 { bottom: 12%; left: 9%; font-size: 20px; }
+  .s4 { bottom: 7%; right: 10%; font-size: 16px; }
+  .logo {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(48px, 14vw, 72px);
+    line-height: .9;
+    letter-spacing: 1px;
+    margin: 4px 0 5px;
+  }
+  .tagline {
+    font-size: 10px;
+    letter-spacing: 5px;
+    margin-bottom: 22px;
+  }
+  .divider {
+    width: 150px;
+    height: 1px;
+    background: #6f58d9;
+    margin: 0 auto 22px;
+    position: relative;
+  }
+  .divider:after {
+    content: "✦";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -58%);
+    background: #f8f2ff;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(29px, 8vw, 40px);
+    margin: 0 0 20px;
+    font-weight: 500;
+  }
+  .card {
+    background: rgba(255,255,255,.72);
+    border: 1px solid rgba(255,255,255,.95);
+    border-radius: 25px;
+    padding: 28px 22px 24px;
+    box-shadow: 0 18px 55px rgba(66,42,140,.12);
+    backdrop-filter: blur(12px);
+  }
+  .hint {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #4d3aa3;
+  }
+  .data {
+    text-align: left;
+    white-space: pre-line;
+    font-size: 16px;
+    line-height: 1.9;
+    color: #21106e;
+    padding: 18px;
+    border-radius: 17px;
+    background: rgba(248,242,255,.78);
+    border: 1px solid rgba(111,88,217,.12);
+    user-select: text;
+    -webkit-user-select: text;
+  }
+  button {
+    width: 100%;
+    border: 0;
+    border-radius: 999px;
+    padding: 16px 20px;
+    margin-top: 20px;
+    background: #6f58d9;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    cursor: pointer;
+    box-shadow: 0 9px 22px rgba(111,88,217,.25);
+  }
+  button:active { transform: scale(.99); }
+  #status {
+    min-height: 22px;
+    margin-top: 11px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #4d3aa3;
+  }
+  .thanks {
+    margin-top: 24px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+  }
+  .footer {
+    margin-top: 15px;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: #4d3aa3;
+  }
+</style>
+</head>
+<body>
+  <div class="spark s1">✦</div>
+  <div class="spark s2">✧</div>
+  <div class="spark s3">✦</div>
+  <div class="spark s4">✧</div>
+
+  <main class="wrap">
+    <div class="logo">VIBES</div>
+    <div class="tagline">E N C U E N T R A &nbsp; L A &nbsp; T U Y A</div>
+    <div class="divider"></div>
+
+    <h1>Datos de transferencia</h1>
+
+    <section class="card">
+      <div class="hint">Copia y pega tus datos directamente en tu banco</div>
+
+      <div class="data" id="data">Alexandra Belén Muñoz Saavedra
+RUT: 212130583
+Mercado Pago
+Cuenta Vista
+Número de cuenta: 1025134848
+belenmunozsaavedra@gmail.com</div>
+
+      <button id="copy">COPIAR DATOS</button>
+      <div id="status" aria-live="polite"></div>
+    </section>
+
+    <div class="thanks">¡Muchas gracias por tu compra!</div>
+    <div class="footer">VIBES · ENCUENTRA LA TUYA</div>
+  </main>
+
+<script>
+const data = document.getElementById('data').innerText.trim();
+const button = document.getElementById('copy');
+const status = document.getElementById('status');
+
+button.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(data);
+    status.textContent = '✓ Datos copiados al portapapeles';
+    button.textContent = '✓ DATOS COPIADOS';
+    setTimeout(() => {
+      status.textContent = '';
+      button.textContent = 'COPIAR DATOS';
+    }, 2500);
+  } catch (e) {
+    // Fallback for browsers that do not expose the Clipboard API.
+    const area = document.createElement('textarea');
+    area.value = data;
+    area.style.position = 'fixed';
+    area.style.opacity = '0';
+    document.body.appendChild(area);
+    area.focus();
+    area.select();
+    try {
+      document.execCommand('copy');
+      status.textContent = '✓ Datos copiados al portapapeles';
+      button.textContent = '✓ DATOS COPIADOS';
+    } catch (err) {
+      status.textContent = 'Selecciona el texto para copiarlo manualmente.';
+    }
+    document.body.removeChild(area);
+    setTimeout(() => {
+      status.textContent = '';
+      button.textContent = 'COPIAR DATOS';
+    }, 2500);
+  }
+});
+</script>
+</body>
+</html>
